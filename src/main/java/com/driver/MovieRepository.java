@@ -23,32 +23,37 @@ public class MovieRepository {
     }
 
     public void addMovieDirectorPair(String movieName, String directorName){
-        Director dirObj = directorList.get(directorName);
-        if(movieDirectorPair.containsKey(dirObj)){
-            List<Movie> list = movieDirectorPair.get(directorName);
-            list.add(movieList.get(movieName));
-            movieDirectorPair.put(dirObj,list);
-        } else {
-            List<Movie> list = new ArrayList<>();
-            list.add(movieList.get(movieName));
-            movieDirectorPair.put(dirObj, list);
+        Director dirObj = directorList.getOrDefault(directorName, null);
+        Movie movieObj = movieList.getOrDefault(movieName, null);
+        if(dirObj != null && movieObj!= null){
+            if(movieDirectorPair.containsKey(dirObj)){
+                List<Movie> list = movieDirectorPair.get(dirObj);
+                list.add(movieObj);
+                movieDirectorPair.put(dirObj,list);
+            } else {
+                List<Movie> list = new ArrayList<>();
+                list.add(movieObj);
+                movieDirectorPair.put(dirObj, list);
+            }
         }
+
     }
 
     public Movie getMovieByName(String name){
-        return movieList.get(name);
+        return movieList.getOrDefault(name, new Movie());
     }
 
     public Director getDirectorByName(String name){
-        return directorList.get(name);
+        return directorList.getOrDefault(name, new Director());
     }
 
     public List<Movie> getMoviesByDirectorName(String name){
-        Director dirObj = directorList.get(name);
-        if(movieDirectorPair.containsKey(dirObj)){
+        Director dirObj = directorList.getOrDefault(name, null);
+        if(dirObj != null && movieDirectorPair.containsKey(dirObj)){
             return movieDirectorPair.get(dirObj);
         } else {
-            return new ArrayList<Movie>();
+            List<Movie> ans = new ArrayList<>();
+            return ans;
         }
     }
 
@@ -61,8 +66,8 @@ public class MovieRepository {
     }
 
     public void deleteDirectorByName(String name){
-        Director dirObj = directorList.get(name);
-        if(movieDirectorPair.containsKey(dirObj)){
+        Director dirObj = directorList.getOrDefault(name, null);
+        if(dirObj != null && movieDirectorPair.containsKey(dirObj)){
             List<Movie> moviesObj = movieDirectorPair.get(dirObj);
             for(Movie dirMovie : moviesObj){
                 movieList.remove(dirMovie.getName());
