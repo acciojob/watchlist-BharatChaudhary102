@@ -47,20 +47,22 @@ public class MovieRepository {
         return directorList.getOrDefault(name, new Director());
     }
 
-    public List<Movie> getMoviesByDirectorName(String name){
+    public List<String> getMoviesByDirectorName(String name){
         Director dirObj = directorList.getOrDefault(name, null);
+        List<String> ans = new ArrayList<>();
         if(dirObj != null && movieDirectorPair.containsKey(dirObj)){
-            return movieDirectorPair.get(dirObj);
-        } else {
-            List<Movie> ans = new ArrayList<>();
-            return ans;
+            List<Movie> allMovies = movieDirectorPair.get(dirObj);
+            for(Movie curr : allMovies){
+                ans.add(curr.getName());
+            }
         }
+        return ans;
     }
 
-    public List<Movie> findAllMovies(){
-        List<Movie> ans = new ArrayList<>();
+    public List<String> findAllMovies(){
+        List<String> ans = new ArrayList<>();
         for(Map.Entry<String, Movie> pair : movieList.entrySet()){
-            ans.add(pair.getValue());
+            ans.add(pair.getKey());
         }
         return ans;
     }
